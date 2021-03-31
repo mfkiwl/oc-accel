@@ -387,6 +387,10 @@ static int memcpy_test (struct snap_card* dnc,
         }
 
         dest = f_dest + align;
+                VERBOSE0 ("---------- src Buffer: %p\n", src);
+                __hexdump (stdout, src, memsize);
+                VERBOSE0 ("---------- dest Buffer: %p\n", dest);
+                __hexdump (stdout, dest, memsize);
         VERBOSE1 ("  To Host:   %p (%p) timeout: %d sec\n", dest, f_dest, timeout);
         rc = do_action (dnc, attach_flags, action, timeout, dest, src, memsize);
 
@@ -394,6 +398,10 @@ static int memcpy_test (struct snap_card* dnc,
             VERBOSE1 ("  Compare: %p <-> %p\n", src, dest);
             rc = memcmp2 (src, dest, memsize);
 
+            if (rc) {
+                VERBOSE0 ("Error Memcmp failed at 0x%x\n", rc - 1);
+            }
+        }
             if ((verbose_level > 1) || rc) {
                 VERBOSE0 ("---------- src Buffer: %p\n", src);
                 __hexdump (stdout, src, memsize);
@@ -401,10 +409,6 @@ static int memcpy_test (struct snap_card* dnc,
                 __hexdump (stdout, dest, memsize);
             }
 
-            if (rc) {
-                VERBOSE0 ("Error Memcmp failed at 0x%x\n", rc - 1);
-            }
-        }
 
         free_mem (f_src);
         free_mem (f_dest);
@@ -570,6 +574,7 @@ static void usage (const char* prog)
               "\t-a 4: Copy from DDR Memory (FPGA Card) to Host Memory.\n"
               "\t-a 5: Copy from DDR Memory to DDR Memory (both on FPGA Card).\n"
               "\t-a 6: Copy from Host -> DDR -> Host.\n"
+              "OCSE DEBUG=> snap_example -a2 -S0 -B2 -t5 -vvv -A2 -D0x01\n"
               , prog, START_DELAY, END_DELAY, STEP_DELAY);
 }
 

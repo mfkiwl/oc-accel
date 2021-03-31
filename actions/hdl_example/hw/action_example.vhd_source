@@ -931,17 +931,17 @@ action_axi_nvme_inst : entity work.action_axi_nvme                              
                   else
                     first_blk_w      <= blocks_to_write ;
                   end if;
-                  rd_addr            <= reg_0x38 & reg_0x34(31 downto 6) & "000000";
+                  rd_addr            <= reg_0x38 & reg_0x34(31 downto 6) & "000010";
                   if memcopy then
                     wr_addr          <= reg_0x40 & reg_0x3c(31 downto 6) & "000000";
                   else
-                    wr_addr          <= reg_0x38 & reg_0x34(31 downto 6) & "000000";
+                    wr_addr          <= reg_0x38 & reg_0x34(31 downto 6) & "000010";
                   end if;
 
                   rd_requests_done <= '0';
                   wr_requests_done <= '0';
-                  rd_len          <= first_blk_r (7 downto 0) - '1';
-                  wr_len          <= first_blk_w (7 downto 0) - '1';
+                  rd_len          <= x"02"; --first_blk_r (7 downto 0) - '1';
+                  wr_len          <= x"02"; --first_blk_w (7 downto 0) - '1';
 
                   rd_addr_adder   <= x"1000" - (reg_0x34(11 downto 6) & (5 downto 0 =>'0'));
 
@@ -1003,7 +1003,7 @@ action_axi_nvme_inst : entity work.action_axi_nvme                              
                       rd_len         <= x"3f";
                       blocks_to_read <= blocks_to_read - x"40";
                     else
-                      rd_len         <= blocks_to_read(7 downto 0) - '1';
+                      rd_len         <= x"02"; --blocks_to_read(7 downto 0) - '1';
                       blocks_to_read <= (others => '0');
                     end if;
                   end if;
@@ -1022,7 +1022,7 @@ action_axi_nvme_inst : entity work.action_axi_nvme                              
                       wr_len     <= x"3f";
                       blocks_to_write <= blocks_to_write - x"40";
                     else
-                      wr_len         <= blocks_to_write(7 downto 0) - '1';
+                      wr_len         <= x"02"; --blocks_to_write(7 downto 0) - '1';
                       blocks_to_write <= (others => '0');
                     end if;
                   end if;
